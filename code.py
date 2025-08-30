@@ -1,8 +1,10 @@
 from lib.my_pkg.set_ntp_time import set_ntp_time_is_successful, pretty_time
 from lib.my_pkg.creds import creds
 from lib.my_pkg.konstants import rotary_encoder_constants
-from lib.my_pkg.send_to_server import check_forwarding_server, post_to_server
+from lib.my_pkg.send_to_server import check_forwarding_server
+from lib.my_pkg.write_to_display import report_seconds, report_resets  
 from lib.my_pkg.write_to_display import print_to_display, report
+from lib.my_pkg.konstants import number_of_samples_per_minute
 import board
 import time
 import wifi
@@ -76,6 +78,9 @@ for i in range(num_rotary_encoders):
    pixel[i].brightness = .01
    pixel[i].fill(0x0000FF)
    position.append(encoder[i].position)
+#-------- get list of seconds to report and list of reset times -------
+report_times = report_seconds(number_of_samples_per_minute)
+reset_report_times = report_resets(report_times)
 # ----------------- server stuff below ------------------
 try:   
    response_code, id = check_forwarding_server()
@@ -106,18 +111,6 @@ while True:
             button_held[i] = True
             pixel[i].brightness = .1
             pixel[i].fill(0xFF00FF)
-         if(i == 0 and button[i].value and button_held[i]):  # first rotary encoder will print out the SGP30 baseline
-            button_held[i] = False
-            pixel[i].brightness = .01
-            baseline_eCO2 = sgp30.baseline_eCO2
-            baseline_TVOC = sgp30.baseline_TVOC
-            time_string = pretty_time(time.localtime())
-            measurements = {
-                  "baseline_eCO2": f"{baseline_eCO2:X}", 
-                  "baseline_TVOC": f"{baseline_TVOC:X}"
-                  }
-            print(f"{time_string} \t base_eCO2:0x{baseline_eCO2:X} \t base_TVOC:0x{baseline_TVOC:X} \t 🐼")
-            print_to_display(display, i2c_bus, 9, 2, measurements=measurements)
          if(i == (num_rotary_encoders-1) and button[i].value and button_held[i]): # last rotary encoder will print all measurements
             button_held[i] = False
             pixel[i].brightness = .01
@@ -135,8 +128,8 @@ while True:
                 }
             report(measurements, display, i2c_bus, time_string)    
       time_string = pretty_time(time.localtime())
-      print_time = (time_string.split(":")[2]) == "00" or (time_string.split(":")[2]) == "01"
-      if(print_time and print_toggle): # all measurements will be printed at the top of the minute
+      print_time = (time_string.split(":")[2]) in report_times
+      if(print_time and print_toggle): # 
          print_toggle = False
          temperature, relative_humidity = sht.measurements
          temperature = temperature * (9/5) + 32.0
@@ -149,7 +142,7 @@ while True:
                "TVOC": f"{tVOC:d}"
                 }
          report(measurements, display, i2c_bus, time_string) 
-      reset_print_time = (time_string.split(":")[2]) == "02" or (time_string.split(":")[2]) == "03"
+      reset_print_time = (time_string.split(":")[2])  in reset_report_times
       if(reset_print_time and not print_toggle): # reset print toggle to print again
          print_toggle = True
    except KeyboardInterrupt:

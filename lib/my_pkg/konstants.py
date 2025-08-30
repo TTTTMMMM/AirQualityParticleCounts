@@ -3,8 +3,8 @@ ntp_constants = {
    "number_of_times_to_try_calling_ntp_server": 6
 }
 rotary_encoder_constants = {
-   "number_of_rotary_encoders": 2,
-   "addresses": [0x36, 0x37]
+   "number_of_rotary_encoders": 1,
+   "addresses": [0x36]
 }
 server_constants = {
    "json_get_url_Mac": "http://192.168.1.216:8001/forwarder/metrics/",

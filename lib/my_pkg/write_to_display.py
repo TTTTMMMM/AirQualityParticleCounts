@@ -78,7 +78,7 @@ def print_to_display(display,
    elif(block_number==9):
       time_string = pretty_time(time.localtime())
       display_lines.append(f"{time_string}")
-      display_lines.append(f"-")
+      display_lines.append(f"PM2.5 sensor found")
       display_lines.append(f"-")
       display_lines.append(f"-")
       display_lines.append("-")

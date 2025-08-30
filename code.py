@@ -14,9 +14,12 @@ from rainbowio import colorwheel
 from i2cdisplaybus import I2CDisplayBus
 import displayio
 from adafruit_displayio_sh1107 import SH1107, DISPLAY_OFFSET_ADAFRUIT_128x128_OLED_5297
+from adafruit_pm25.i2c import PM25_I2C         # for PMSA003I PM2.5 sensor
+
+reset_pin = None
 
 displayio.release_displays()
-i2c_bus = busio.I2C(board.GP5, board.GP4)  # set up an I2C bus using GP5 as clk and GP4 as data 
+i2c_bus = busio.I2C(board.GP5, board.GP4, frequency=100000)  # set up an I2C bus using GP5 as clk and GP4 as data 
 i2c_bus.unlock()
 display_bus = I2CDisplayBus(i2c_bus, device_address=0x3D)
 display = SH1107(
@@ -81,6 +84,10 @@ for i in range(num_rotary_encoders):
 #-------- get list of seconds to report and list of reset times -------
 report_times = report_seconds(number_of_samples_per_minute)
 reset_report_times = report_resets(report_times)
+# -------- initialize PM25_I2C object -------------
+pm25 = PM25_I2C(i2c_bus, reset_pin)
+print("PM2.5 sensor found")
+print_to_display(display, i2c_bus, 9, 2)
 # ----------------- server stuff below ------------------
 try:   
    response_code, id = check_forwarding_server()

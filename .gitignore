@@ -1,0 +1,10 @@
+creds.py
+__pycache__/
+.fseventsd/
+.vscode/
+.__code.py
+.Trash*
+.__*
+._*
+.meta*
+.DS_Store

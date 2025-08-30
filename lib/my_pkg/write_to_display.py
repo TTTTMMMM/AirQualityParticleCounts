@@ -159,3 +159,21 @@ def report(measurements: dict={}, display: any= {}, i2c_bus: any= {}, time_strin
    print(f"{time_string} \t {temperature}℉ \t {relative_humidity:}% \t eCO2:{eCO2}ppm \t TVOC:{tVOC}ppb \t {id} \t {firebase_id} \t {forwarder} 🐳")
 
    return None   
+
+def report_seconds(n:int=1) -> list:
+    if ((n <= 0) or (n == 1) or (n > 15)) :
+        return ["00"]
+    numbers = []
+    step =60/n
+    for i in range(n):
+        num = round(i * step)          # Calculate the number and round it to the nearest integer
+        num = max(0, min(60, num))     # Ensure the number stays within the 0-60 range
+        numbers.append(f"{num:02d}")   # Format the number as a 2-digit string with leading zeros
+    
+    return numbers
+
+def report_resets(report_times:list) -> list:
+   int_list = int_list = [int(s) for s in report_times]
+   reset_ints = [x + 2 for x in int_list]           # 2 seconds after reporting, print toggle is eligible to reset
+   reset_strings = [f"{num:02d}" for num in reset_ints]
+   return reset_strings

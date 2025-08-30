@@ -4,7 +4,6 @@ import terminalio
 import time 
 import wifi
 from lib.my_pkg.set_ntp_time import pretty_time 
-import adafruit_sht4x
 from lib.my_pkg.send_to_server import post_to_server
 
 def print_to_display(display, 
@@ -78,13 +77,10 @@ def print_to_display(display,
       write_to_display(display, display_lines)
    elif(block_number==9):
       time_string = pretty_time(time.localtime())
-      sht = adafruit_sht4x.SHT4x(i2c_bus)   
-      temperature, relative_humidity = sht.measurements
-      temperature = temperature * (9/5) + 32.0
       display_lines.append(f"{time_string}")
-      display_lines.append(f"{temperature:3.1f} F \t {relative_humidity:3.1f}%")
-      display_lines.append(f"base_eCO2: 0x{measurements['baseline_eCO2']}")
-      display_lines.append(f"base_TVOC: 0x{measurements['baseline_TVOC']}")
+      display_lines.append(f"-")
+      display_lines.append(f"-")
+      display_lines.append(f"-")
       display_lines.append("-")
       write_to_display(display, display_lines)
    elif(block_number==10):
@@ -113,18 +109,32 @@ def print_to_display(display,
 
 def write_to_display(display, text_list: list) -> None:
    # Make the display context
+   BORDER = 2
    splash = displayio.Group()
    display.root_group = splash
 
-   text_area = label.Label(terminalio.FONT, text=text_list[0], color=0xFFFFFF, x=2, y=6)
+   color_bitmap = displayio.Bitmap(128, 128, 1)
+   color_palette = displayio.Palette(1)
+   color_palette[0] = 0xFFFFFF  # White
+   bg_sprite = displayio.TileGrid(color_bitmap, pixel_shader=color_palette, x=0, y=0)
+   splash.append(bg_sprite)
+
+   # Draw a smaller inner rectangle in black
+   inner_bitmap = displayio.Bitmap(128 - BORDER * 2, 128 - BORDER * 2, 1)
+   inner_palette = displayio.Palette(1)
+   inner_palette[0] = 0x000000  # Black
+   inner_sprite = displayio.TileGrid(inner_bitmap, pixel_shader=inner_palette, x=BORDER, y=BORDER)
+   splash.append(inner_sprite)
+
+   text_area = label.Label(terminalio.FONT, text=text_list[0], x=3 + BORDER, y=6 + BORDER)
    splash.append(text_area)
-   text_area = label.Label(terminalio.FONT, text=text_list[1], color=0xFFFFFF, x=9, y=18)
+   text_area = label.Label(terminalio.FONT, text=text_list[1], x=9 + BORDER, y=18 + BORDER)
    splash.append(text_area)
-   text_area = label.Label(terminalio.FONT, text=text_list[2], color=0xFFFFFF, x=9, y=31)
+   text_area = label.Label(terminalio.FONT, text=text_list[2], x=9 + BORDER, y=31 + BORDER)
    splash.append(text_area)
-   text_area = label.Label(terminalio.FONT, text=text_list[3], color=0xFFFFFF, x=9, y=45)
+   text_area = label.Label(terminalio.FONT, text=text_list[3], x=9 + BORDER, y=45 + BORDER)
    splash.append(text_area)   
-   text_area = label.Label(terminalio.FONT, text=text_list[4], color=0xFFFFFF, x=2, y=58)
+   text_area = label.Label(terminalio.FONT, text=text_list[4], x=3 + BORDER, y=58 + BORDER)
    splash.append(text_area)   
 
    return None
@@ -149,21 +159,3 @@ def report(measurements: dict={}, display: any= {}, i2c_bus: any= {}, time_strin
    print(f"{time_string} \t {temperature}℉ \t {relative_humidity:}% \t eCO2:{eCO2}ppm \t TVOC:{tVOC}ppb \t {id} \t {firebase_id} \t {forwarder} 🐳")
 
    return None   
-
-def report_seconds(n:int=1) -> list:
-    if ((n <= 0) or (n == 1) or (n > 15)) :
-        return ["00"]
-    numbers = []
-    step =60/n
-    for i in range(n):
-        num = round(i * step)          # Calculate the number and round it to the nearest integer
-        num = max(0, min(60, num))     # Ensure the number stays within the 0-60 range
-        numbers.append(f"{num:02d}")   # Format the number as a 2-digit string with leading zeros
-    
-    return numbers
-
-def report_resets(report_times:list) -> list:
-   int_list = int_list = [int(s) for s in report_times]
-   reset_ints = [x + 2 for x in int_list]           # 2 seconds after reporting, print toggle is eligible to reset
-   reset_strings = [f"{num:02d}" for num in reset_ints]
-   return reset_strings

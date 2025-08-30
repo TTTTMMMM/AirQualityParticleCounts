@@ -11,9 +11,6 @@ from adafruit_seesaw import seesaw, rotaryio, digitalio, neopixel
 from rainbowio import colorwheel
 from i2cdisplaybus import I2CDisplayBus
 import displayio
-import terminalio 
-from adafruit_display_text import label
-from i2cdisplaybus import I2CDisplayBus
 from adafruit_displayio_sh1107 import SH1107, DISPLAY_OFFSET_ADAFRUIT_128x128_OLED_5297
 
 displayio.release_displays()
@@ -27,61 +24,25 @@ display = SH1107(
     display_offset=DISPLAY_OFFSET_ADAFRUIT_128x128_OLED_5297,
     rotation=270,
 )
-# ----------------
-# Make the display context
-WIDTH = 128
-HEIGHT = 128
-BORDER = 2
-splash = displayio.Group()
-display.root_group = splash
-
-color_bitmap = displayio.Bitmap(WIDTH, HEIGHT, 1)
-color_palette = displayio.Palette(1)
-color_palette[0] = 0xFFFFFF  # White
-
-bg_sprite = displayio.TileGrid(color_bitmap, pixel_shader=color_palette, x=0, y=0)
-splash.append(bg_sprite)
-
-# Draw a smaller inner rectangle in black
-inner_bitmap = displayio.Bitmap(WIDTH - BORDER * 2, HEIGHT - BORDER * 2, 1)
-inner_palette = displayio.Palette(1)
-inner_palette[0] = 0x000000  # Black
-inner_sprite = displayio.TileGrid(inner_bitmap, pixel_shader=inner_palette, x=BORDER, y=BORDER)
-splash.append(inner_sprite)
-
-# Draw some label text
-name_text = "Monochrome 1.12in"
-name_text_area = label.Label(terminalio.FONT, text=name_text, x=8, y=8)
-splash.append(name_text_area)
-size_text = "128x128"
-size_text_area = label.Label(terminalio.FONT, text=size_text, scale=2, x=8, y=25)
-splash.append(size_text_area)
-oled_text = "OLED"
-oled_text_area = label.Label(terminalio.FONT, text=oled_text, scale=3, x=9, y=54)
-splash.append(oled_text_area)
-
-while True:
-    pass
-# -----------------
 print_to_display(display, i2c_bus, 1, 1)
 
 try:
    wifi.radio.connect(creds['ssid'], creds['password'])   # connect to wifi
-   # print_to_display(display, i2c_bus, 2, 5)
+   print_to_display(display, i2c_bus, 2, 5)
 except Exception as e:
-   # print_to_display(display, i2c_bus, 3, 5)
+   print_to_display(display, i2c_bus, 3, 5)
    print(f"Errored out trying to establish wifi:\n{e}\nWill not proceed further with script...")
    while True:   # do nothing forever
       pass           
     
 if set_ntp_time_is_successful(wifi.radio):    # function calls ntp server to set Pico 2 W real time clock
-   # print_to_display(display, i2c_bus, 4, 5)
+   print_to_display(display, i2c_bus, 4, 5)
    print(f"Set real-time clock to ntp time: {pretty_time(time.localtime())}")
 else:
-   # print_to_display(display, i2c_bus, 5, 6)
+   print_to_display(display, i2c_bus, 5, 6)
    print(f"Couldn't set real-time clock to ntp time. Continuing anyway with time reading \n{pretty_time(time.localtime())}.")
 
-# print_to_display(display, i2c_bus, 6, 5)
+print_to_display(display, i2c_bus, 6, 5)
 # # only using rotary encoders to get measurements (last rotary encoder) 
 # and air quality baseline (first rotary encoder) on demand rather than having to wait
 # for the seconds on the timer to read "00"
@@ -116,12 +77,9 @@ for i in range(num_rotary_encoders):
    pixel[i].fill(0x0000FF)
    position.append(encoder[i].position)
 # ----------------- server stuff below ------------------
-# response_code = send_to_server({"SGP30 serial #": list1})
-connected_to_forwarding_server: bool = False
 try:   
    response_code, id = check_forwarding_server()
    if(response_code == 200):
-      connected_to_forwarding_server = True
       print_to_display(display, i2c_bus, 7, 5, id)
       print(f"🧸 Forwarding server is up with latest id = {id} 🧸")
    else:

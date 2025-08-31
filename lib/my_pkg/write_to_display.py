@@ -71,9 +71,9 @@ def print_to_display(display,
       pm10s = measurements["pm10s"]
       pm25s = measurements["pm25s"]
       pm100s = measurements["pm100s"]
-      pm10e = measurements["pm10e"]
-      pm25e = measurements["pm25e"]
-      pm100e = measurements["pm100e"]
+      # pm10e = measurements["pm10e"]
+      # pm25e = measurements["pm25e"]
+      # pm100e = measurements["pm100e"]
       pm03um = measurements[".3um"]
       pm05um = measurements[".5um"]
       pm1um = measurements["1um"]
@@ -82,14 +82,14 @@ def print_to_display(display,
       pm10um = measurements["10um"]
       short_fb_id = fb_id[:8]
       display_lines[0] = f"{time_string}"
-      display_lines[1] = f"1.0s:{pm10s} \t2.5s:{pm25s} \t10s:{pm100s}"
+      display_lines[1] = f"1.0:{pm10s} 2.5:{pm25s} 10:{pm100s}"
       # display_lines[2] = f"1.0e:{pm10e} \t2.5e:{pm25e} \t10e:{pm100e}"
       display_lines[2] = f"num > 0.3um: {pm03um}"
       display_lines[3] = f"num > 0.5um: {pm05um}"
       display_lines[4] = f"num > 1.0um: {pm1um}"
       display_lines[5] = f"num > 2.5um: {pm25um}"
       display_lines[6] = f"num > 5.0um: {pm5um}"
-      display_lines[7] = f"num > 10um: {pm10um}"
+      display_lines[7] = f"num > 10um:  {pm10um}"
       display_lines[8] = f"id:{id}\t{short_fb_id}"
       write_to_display(display, display_lines)
    else:
@@ -105,6 +105,8 @@ def print_to_display(display,
 def write_to_display(display, text_list: list) -> None:
    # Make the display context
    BORDER = 2
+   Y_DELTA = 13
+   Y_INIT = 6
    splash = displayio.Group()
    display.root_group = splash
 
@@ -121,23 +123,23 @@ def write_to_display(display, text_list: list) -> None:
    inner_sprite = displayio.TileGrid(inner_bitmap, pixel_shader=inner_palette, x=BORDER, y=BORDER)
    splash.append(inner_sprite)
 
-   text_area = label.Label(terminalio.FONT, text=text_list[0], x=3 + BORDER, y=6 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[0], x=3 + BORDER, y=Y_INIT + BORDER)
    splash.append(text_area)
-   text_area = label.Label(terminalio.FONT, text=text_list[1], x=3 + BORDER, y=18 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[1], x=3 + BORDER, y=Y_INIT + BORDER + Y_DELTA*1)
    splash.append(text_area)
-   text_area = label.Label(terminalio.FONT, text=text_list[2], x=3 + BORDER, y=31 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[2], x=3 + BORDER, y=Y_INIT + BORDER + Y_DELTA*2)
    splash.append(text_area)
-   text_area = label.Label(terminalio.FONT, text=text_list[3], x=3 + BORDER, y=45 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[3], x=3 + BORDER, y=Y_INIT + BORDER + Y_DELTA*3)
    splash.append(text_area)   
-   text_area = label.Label(terminalio.FONT, text=text_list[4], x=3 + BORDER, y=58 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[4], x=3 + BORDER, y=Y_INIT + BORDER + Y_DELTA*4)
    splash.append(text_area)   
-   text_area = label.Label(terminalio.FONT, text=text_list[5], x=3 + BORDER, y=71 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[5], x=3 + BORDER, y=Y_INIT + BORDER + Y_DELTA*5)
    splash.append(text_area)   
-   text_area = label.Label(terminalio.FONT, text=text_list[6], x=3 + BORDER, y=84 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[6], x=3 + BORDER, y=Y_INIT + BORDER + Y_DELTA*6)
    splash.append(text_area) 
-   text_area = label.Label(terminalio.FONT, text=text_list[7], x=3 + BORDER, y=97 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[7], x=3 + BORDER, y=Y_INIT + BORDER + Y_DELTA*7)
    splash.append(text_area) 
-   text_area = label.Label(terminalio.FONT, text=text_list[8], x=3 + BORDER, y=110 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[8], x=3 + BORDER, y=Y_INIT + BORDER + Y_DELTA*8)
    splash.append(text_area) 
    # text_area = label.Label(terminalio.FONT, text=text_list[9], x=3 + BORDER, y=113 + BORDER)
    # splash.append(text_area)
@@ -148,10 +150,12 @@ def report(measurements: dict={}, display: any= {}, i2c_bus: any= {}, time_strin
    firebase_id = -1
    forwarder = "down"
    try:
-      # temperature = measurements['temperature']
-      # relative_humidity = measurements['humidity']
-      # eCO2 = measurements['eCO2']
-      # tVOC = measurements['TVOC']
+      pm03um = measurements[".3um"]
+      pm05um = measurements[".5um"]
+      pm1um = measurements["1um"]
+      pm25um = measurements["2.5um"]
+      pm5um = measurements["5um"]
+      pm10um = measurements["10um"]
       # response_code, id, firebase_id, forwarder = post_to_server(measurements)
       response_code = 201
       if(response_code == 201):
@@ -162,7 +166,7 @@ def report(measurements: dict={}, display: any= {}, i2c_bus: any= {}, time_strin
          print(f"🧸 Error from Forwarding server: {response_code} 🧸")
    except Exception as e:
       print(f"💀 {e} 💀")     
-   # print(f"{time_string} \t {temperature}℉ \t {relative_humidity:}% \t eCO2:{eCO2}ppm \t TVOC:{tVOC}ppb \t {id} \t {firebase_id} \t {forwarder} 🐳")
+   print(f"{time_string} \t pm03um:{pm03um} \t pm05um:{pm05um} \t pm1um:{pm1um} \t pm25um:{pm25um} \t pm5um:{pm5um} \t pm10um:{pm10um} \t {id} \t {firebase_id} \t {forwarder} 🐳")
 
    return None   
 

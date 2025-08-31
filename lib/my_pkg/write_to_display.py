@@ -84,12 +84,12 @@ def print_to_display(display,
       display_lines[0] = f"{time_string}"
       display_lines[1] = f"1.0s:{pm10s} \t2.5s:{pm25s} \t10s:{pm100s}"
       # display_lines[2] = f"1.0e:{pm10e} \t2.5e:{pm25e} \t10e:{pm100e}"
-      display_lines[2] = f">0.3um: \t{pm03um}"
-      display_lines[3] = f">0.5um: \t{pm05um}"
-      display_lines[4] = f">1.0um: \t{pm1um}"
-      display_lines[5] = f">2.5um: \t{pm25um}"
-      display_lines[6] = f">5.0um: \t{pm5um}"
-      display_lines[7] = f">10um: \t{pm10um}"
+      display_lines[2] = f"num > 0.3um: {pm03um}"
+      display_lines[3] = f"num > 0.5um: {pm05um}"
+      display_lines[4] = f"num > 1.0um: {pm1um}"
+      display_lines[5] = f"num > 2.5um: {pm25um}"
+      display_lines[6] = f"num > 5.0um: {pm5um}"
+      display_lines[7] = f"num > 10um: {pm10um}"
       display_lines[8] = f"id:{id}\t{short_fb_id}"
       write_to_display(display, display_lines)
    else:

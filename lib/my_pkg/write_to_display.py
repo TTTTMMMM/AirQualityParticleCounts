@@ -83,14 +83,14 @@ def print_to_display(display,
       short_fb_id = fb_id[:8]
       display_lines[0] = f"{time_string}"
       display_lines[1] = f"1.0s:{pm10s} \t2.5s:{pm25s} \t10s:{pm100s}"
-      display_lines[2] = f"1.0e:{pm10e} \t2.5e:{pm25e} \t10e:{pm100e}"
-      display_lines[3] = f">0.3um: \t{pm03um}"
-      display_lines[4] = f">0.5um: \t{pm05um}"
-      display_lines[5] = f">1.0um: \t{pm1um}"
-      display_lines[6] = f">2.5um: \t{pm25um}"
-      display_lines[7] = f">5.0um: \t{pm5um}"
-      display_lines[8] = f">10um: \t{pm10um}"
-      display_lines[9] = f"id:{id}\t{short_fb_id}"
+      # display_lines[2] = f"1.0e:{pm10e} \t2.5e:{pm25e} \t10e:{pm100e}"
+      display_lines[2] = f">0.3um: \t{pm03um}"
+      display_lines[3] = f">0.5um: \t{pm05um}"
+      display_lines[4] = f">1.0um: \t{pm1um}"
+      display_lines[5] = f">2.5um: \t{pm25um}"
+      display_lines[6] = f">5.0um: \t{pm5um}"
+      display_lines[7] = f">10um: \t{pm10um}"
+      display_lines[8] = f"id:{id}\t{short_fb_id}"
       write_to_display(display, display_lines)
    else:
       time_string = pretty_time(time.localtime())
@@ -131,16 +131,16 @@ def write_to_display(display, text_list: list) -> None:
    splash.append(text_area)   
    text_area = label.Label(terminalio.FONT, text=text_list[4], x=3 + BORDER, y=58 + BORDER)
    splash.append(text_area)   
-   text_area = label.Label(terminalio.FONT, text=text_list[5], x=3 + BORDER, y=61 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[5], x=3 + BORDER, y=71 + BORDER)
    splash.append(text_area)   
-   text_area = label.Label(terminalio.FONT, text=text_list[6], x=3 + BORDER, y=74 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[6], x=3 + BORDER, y=84 + BORDER)
    splash.append(text_area) 
-   text_area = label.Label(terminalio.FONT, text=text_list[7], x=3 + BORDER, y=87 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[7], x=3 + BORDER, y=97 + BORDER)
    splash.append(text_area) 
-   text_area = label.Label(terminalio.FONT, text=text_list[8], x=3 + BORDER, y=100 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[8], x=3 + BORDER, y=110 + BORDER)
    splash.append(text_area) 
-   text_area = label.Label(terminalio.FONT, text=text_list[9], x=3 + BORDER, y=113 + BORDER)
-   splash.append(text_area)
+   # text_area = label.Label(terminalio.FONT, text=text_list[9], x=3 + BORDER, y=113 + BORDER)
+   # splash.append(text_area)
    return None
 
 def report(measurements: dict={}, display: any= {}, i2c_bus: any= {}, time_string: str="No time")-> None:

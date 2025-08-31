@@ -119,38 +119,51 @@ while True:
             button_held[i] = True
             pixel[i].brightness = .1
             pixel[i].fill(0xFF00FF)
-         # last rotary encoder will print all measurements
+         # if button pressed, rtc will be synced to ntp time 
          if(i == (num_rotary_encoders-1) and button[i].value and button_held[i]): 
             button_held[i] = False
             pixel[i].brightness = .01
-            time_string = pretty_time(time.localtime())
-            temperature, relative_humidity = sht.measurements
-            temperature = temperature * (9/5) + 32.0
-            eCO2 = sgp30.eCO2
-            tVOC = sgp30.TVOC
-            pixel[i].fill(0x00FFFF)  
-            measurements = {
-               "temperature": f"{temperature:3.1f}", 
-               "humidity": f"{relative_humidity:3.1f}", 
-               "eCO2": f"{eCO2:d}", 
-               "TVOC": f"{tVOC:d}"
-                }
-            report(measurements, display, i2c_bus, time_string)    
+            if set_ntp_time_is_successful(wifi.radio):    # function calls ntp server to set Pico 2 W real time clock
+               print_to_display(display, i2c_bus, 4, 5)
+               print(f"Set real-time clock to ntp time: {pretty_time(time.localtime())}")
+               pixel[i].fill(0x00007F)
+               pixel[i].brightness = .05
+            else:
+               print_to_display(display, i2c_bus, 5, 6)
+               pixel[i].fill(0x7F0000)
+               pixel[i].brightness = .05
+               print(f"Couldn't set real-time clock to ntp time. Continuing anyway with time reading \n{pretty_time(time.localtime())}.")  
       time_string = pretty_time(time.localtime())
       print_time = (time_string.split(":")[2]) in report_times
       if(print_time and print_toggle): # 
          print_toggle = False
-         temperature, relative_humidity = sht.measurements
-         temperature = temperature * (9/5) + 32.0
-         eCO2 = sgp30.eCO2
-         tVOC = sgp30.TVOC 
-         measurements = {
-               "temperature": f"{temperature:3.1f}", 
-               "humidity": f"{relative_humidity:3.1f}", 
-               "eCO2": f"{eCO2:d}", 
-               "TVOC": f"{tVOC:d}"
-                }
-         report(measurements, display, i2c_bus, time_string) 
+         try:
+            aqdata = pm25.read()
+         except RuntimeError:
+            print("Unable to read from PM2.5 sensor")
+            continue
+         print()
+         print("Concentration Units (standard)")
+         print("---------------------------------------")
+         print(
+            "PM 1.0: %d\tPM2.5: %d\tPM10: %d"
+            % (aqdata["pm10 standard"], aqdata["pm25 standard"], aqdata["pm100 standard"])
+         )
+         print("Concentration Units (environmental)")
+         print("---------------------------------------")
+         print(
+            "PM 1.0: %d\tPM2.5: %d\tPM10: %d"
+            % (aqdata["pm10 env"], aqdata["pm25 env"], aqdata["pm100 env"])
+         )
+         print("---------------------------------------")
+         print("Particles > 0.3um / 0.1L air:", aqdata["particles 03um"])
+         print("Particles > 0.5um / 0.1L air:", aqdata["particles 05um"])
+         print("Particles > 1.0um / 0.1L air:", aqdata["particles 10um"])
+         print("Particles > 2.5um / 0.1L air:", aqdata["particles 25um"])
+         print("Particles > 5.0um / 0.1L air:", aqdata["particles 50um"])
+         print("Particles > 10 um / 0.1L air:", aqdata["particles 100um"])
+         print("---------------------------------------")
+         # report(measurements, display, i2c_bus, time_string) 
       reset_print_time = (time_string.split(":")[2])  in reset_report_times
       if(reset_print_time and not print_toggle): # reset print toggle to print again
          print_toggle = True

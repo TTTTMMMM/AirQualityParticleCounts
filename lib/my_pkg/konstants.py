@@ -13,4 +13,4 @@ server_constants = {
    "json_post_url_NAS": "http://192.168.1.232:8001/forwarder/metrics/create/"
 }
 
-number_of_samples_per_minute = 12
+number_of_samples_per_minute = 6

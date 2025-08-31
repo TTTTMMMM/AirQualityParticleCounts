@@ -88,21 +88,21 @@ reset_report_times = report_resets(report_times)
 # -------- initialize PM25_I2C object -------------
 pm25 = PM25_I2C(i2c_bus, reset_pin)
 print("PM2.5 sensor found")
-print_to_display(display, i2c_bus, 9, 2)
+print_to_display(display, i2c_bus, 9, 3)
 # ----------------- server stuff below ------------------
 try:   
    response_code, id = check_forwarding_server()
    if(response_code == 200):
-      print_to_display(display, i2c_bus, 7, 5, id)
+      print_to_display(display, i2c_bus, 7, 3, id)
       print(f"🧸 Forwarding server is up with latest id = {id} 🧸")
    else:
-      print_to_display(display, i2c_bus, 8, 5)
+      print_to_display(display, i2c_bus, 8, 3)
       print(f"🧸 Forwarding server response_code is {response_code} 🧸")
 except Exception as e:
    print(f"💀" * 40)
    print(f"{e} \t Continuing without forwarding...")
    print(f"💀" * 40)
-   print_to_display(display, i2c_bus, 8, 5)
+   print_to_display(display, i2c_bus, 8, 3)
 
 degree_symbol = chr(176)
 print("+" * 125)
@@ -138,32 +138,27 @@ while True:
       if(print_time and print_toggle): # 
          print_toggle = False
          try:
-            aqdata = pm25.read()
+            aqd = pm25.read()
          except RuntimeError:
             print("Unable to read from PM2.5 sensor")
             continue
-         print()
-         print("Concentration Units (standard)")
-         print("---------------------------------------")
          print(
-            "PM 1.0: %d\tPM2.5: %d\tPM10: %d"
-            % (aqdata["pm10 standard"], aqdata["pm25 standard"], aqdata["pm100 standard"])
-         )
-         print("Concentration Units (environmental)")
-         print("---------------------------------------")
-         print(
-            "PM 1.0: %d\tPM2.5: %d\tPM10: %d"
-            % (aqdata["pm10 env"], aqdata["pm25 env"], aqdata["pm100 env"])
-         )
-         print("---------------------------------------")
-         print("Particles > 0.3um / 0.1L air:", aqdata["particles 03um"])
-         print("Particles > 0.5um / 0.1L air:", aqdata["particles 05um"])
-         print("Particles > 1.0um / 0.1L air:", aqdata["particles 10um"])
-         print("Particles > 2.5um / 0.1L air:", aqdata["particles 25um"])
-         print("Particles > 5.0um / 0.1L air:", aqdata["particles 50um"])
-         print("Particles > 10 um / 0.1L air:", aqdata["particles 100um"])
-         print("---------------------------------------")
-         # report(measurements, display, i2c_bus, time_string) 
+            time_string, 
+            f"pm10s: {aqd['pm10 standard']}", 
+            f"pm2.5s: {aqd['pm25 standard']}", 
+            f"pm100s: {aqd['pm100 standard']}", 
+            f"pm10e: {aqd['pm10 env']}", 
+            f"pm2.5e: {aqd['pm25 env']}", 
+            f"pm100e: {aqd['pm100 env']}",
+            f".3um: {aqd['particles 03um']}", 
+            f".5um: {aqd['particles 05um']}",
+            f"1um: {aqd['particles 10um']}", 
+            f"2.5um: {aqd['particles 25um']}", 
+            f"5um: {aqd['particles 50um']}",
+            f"10um: {aqd['particles 100um']}",  
+            "🧸",
+            sep=", "
+         )         # report(measurements, display, i2c_bus, time_string) 
       reset_print_time = (time_string.split(":")[2])  in reset_report_times
       if(reset_print_time and not print_toggle): # reset print toggle to print again
          print_toggle = True

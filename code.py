@@ -19,7 +19,8 @@ from adafruit_pm25.i2c import PM25_I2C         # for PMSA003I PM2.5 sensor
 reset_pin = None
 
 displayio.release_displays()
-i2c_bus = busio.I2C(board.GP5, board.GP4, frequency=100000)  # set up an I2C bus using GP5 as clk and GP4 as data 
+# set up an I2C bus using GP27 (Yellow) as clk and GP26 (blue) as data 
+i2c_bus = busio.I2C(board.GP27, board.GP26, frequency=100000) 
 i2c_bus.unlock()
 display_bus = I2CDisplayBus(i2c_bus, device_address=0x3D)
 display = SH1107(

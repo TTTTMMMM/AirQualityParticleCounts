@@ -106,7 +106,7 @@ except Exception as e:
 
 degree_symbol = chr(176)
 print("+" * 125)
-print_toggle = True                        # used to control the amount of printing/reporting in the loop
+print_toggle = True  # used to control the amount of printing/reporting in the loop
 while True:
    time.sleep(0.3)
    try:
@@ -119,7 +119,8 @@ while True:
             button_held[i] = True
             pixel[i].brightness = .1
             pixel[i].fill(0xFF00FF)
-         if(i == (num_rotary_encoders-1) and button[i].value and button_held[i]): # last rotary encoder will print all measurements
+         # last rotary encoder will print all measurements
+         if(i == (num_rotary_encoders-1) and button[i].value and button_held[i]): 
             button_held[i] = False
             pixel[i].brightness = .01
             time_string = pretty_time(time.localtime())

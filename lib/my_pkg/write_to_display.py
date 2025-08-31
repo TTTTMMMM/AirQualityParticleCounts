@@ -13,96 +13,91 @@ def print_to_display(display,
                      id: str="-",
                      fb_id: str='',
                      measurements: dict={}) -> None:
-   display_lines = []
+   display_lines = ["-" for _ in range(10)]
    if(block_number==1):
-      display_lines.append(f"Connecting to Wifi")
-      display_lines.append(f"-")
-      display_lines.append("-")
-      display_lines.append("-")
-      display_lines.append("-")
+      display_lines[0] = f"Connecting to Wifi"
       write_to_display(display, display_lines)
    elif(block_number==2):
-      display_lines.append(f"Connected to Wifi")
-      display_lines.append(f"IP: {wifi.radio.ipv4_address}")
-      display_lines.append("Setting RTC clock")
-      display_lines.append("-")
-      display_lines.append("-")
+      display_lines[0] = "Connected to Wifi"
+      display_lines[1] = f"IP: {wifi.radio.ipv4_address}"
+      display_lines[2] = "Setting RTC clock"
       write_to_display(display, display_lines)
    elif(block_number==3):
-      display_lines.append(f"Could not ")
-      display_lines.append(f"connect to")
-      display_lines.append("wifi")
-      display_lines.append("STOPPING...")
-      display_lines.append("-")
+      display_lines[0] = "Could not "
+      display_lines[1] = "connect to"
+      display_lines[2] = "wifi"
+      display_lines[3] = "STOPPING..."
       write_to_display(display, display_lines)
    elif(block_number==4):
       time_string = pretty_time(time.localtime())
-      display_lines.append(f"Connected to Wifi")
-      display_lines.append("Set RTC clock to")
-      display_lines.append(f"{time_string[:-3]}")
-      display_lines.append(f"-")
-      display_lines.append("-")
+      display_lines[0] = "Connected to Wifi"
+      display_lines[1] = "Set RTC clock to"
+      display_lines[2] = f"{time_string[:-3]}"
       write_to_display(display, display_lines)
    elif(block_number==5):
       time_string = pretty_time(time.localtime())
-      display_lines.append(f"{time_string[:-3]}")
-      display_lines.append(f"Could not")
-      display_lines.append(f"set real-time")
-      display_lines.append("clock")
-      display_lines.append("-")
+      display_lines[0] = f"{time_string[:-3]}"
+      display_lines[1] = "Could not"
+      display_lines[2] = "set real-time"
+      display_lines[3] = "clock"
       write_to_display(display, display_lines)
    elif(block_number==6):
       time_string = pretty_time(time.localtime())
-      display_lines.append(f"{time_string[:-3]}")
-      display_lines.append(f"IP: {wifi.radio.ipv4_address}")
-      display_lines.append("-")
-      display_lines.append("-")
-      display_lines.append("-")
+      display_lines[0] = f"{time_string[:-3]}"
+      display_lines[1] = f"IP: {wifi.radio.ipv4_address}"
       write_to_display(display, display_lines)
    elif(block_number==7):
       time_string = pretty_time(time.localtime())
-      display_lines.append(f"{time_string[:-3]}")
-      display_lines.append("Connected to")
-      display_lines.append("forwarding server!")
-      display_lines.append("Awaiting measurement")
-      display_lines.append(f"Last id: {id}")
+      display_lines[0] = f"{time_string[:-3]}"
+      display_lines[1] = "Connected to"
+      display_lines[2] = "forwarding server!"
+      display_lines[3] = "Awaiting measurement"
+      display_lines[4] = f"Last id: {id}"
       write_to_display(display, display_lines)
    elif(block_number==8):
       time_string = pretty_time(time.localtime())
-      display_lines.append(f"{time_string[:-3]}")
-      display_lines.append("Forwarding")
-      display_lines.append("server appears")
-      display_lines.append("to be down")
-      display_lines.append("-")
+      display_lines[0] = f"{time_string[:-3]}"
+      display_lines[1] = "Forwarding"
+      display_lines[2] = "server appears"
+      display_lines[3] = "to be down"
       write_to_display(display, display_lines)
    elif(block_number==9):
       time_string = pretty_time(time.localtime())
-      display_lines.append(f"{time_string}")
-      display_lines.append(f"PM2.5 sensor found")
-      display_lines.append(f"-")
-      display_lines.append(f"-")
-      display_lines.append("-")
+      display_lines[0] = f"{time_string}"
+      display_lines[1] = "PM2.5 sensor found"
       write_to_display(display, display_lines)
    elif(block_number==10):
       time_string = pretty_time(time.localtime())
-      temperature = measurements["temperature"]
-      relative_humidity = measurements["humidity"]
-      eCO2 = measurements["eCO2"]
-      TVOC = measurements["TVOC"]
+      pm10s = measurements["pm10s"]
+      pm25s = measurements["pm25s"]
+      pm100s = measurements["pm100s"]
+      pm10e = measurements["pm10e"]
+      pm25e = measurements["pm25e"]
+      pm100e = measurements["pm100e"]
+      pm03um = measurements[".3um"]
+      pm05um = measurements[".5um"]
+      pm1um = measurements["1um"]
+      pm25um = measurements["2.5um"]
+      pm5um = measurements["5um"]
+      pm10um = measurements["10um"]
       short_fb_id = fb_id[:8]
-      display_lines.append(f"{time_string}")
-      display_lines.append(f"{temperature} F \t{relative_humidity}%")
-      display_lines.append(f"eCO2: \t{eCO2} ppm")
-      display_lines.append(f"TVOC: \t{TVOC} ppb")
-      display_lines.append(f"id:{id}\t{short_fb_id}")
+      display_lines[0] = f"{time_string}"
+      display_lines[1] = f"1.0s:{pm10s} \t2.5s:{pm25s} \t10s:{pm100s}"
+      display_lines[2] = f"1.0e:{pm10e} \t2.5e:{pm25e} \t10e:{pm100e}"
+      display_lines[3] = f">0.3um: \t{pm03um}"
+      display_lines[4] = f">0.5um: \t{pm05um}"
+      display_lines[5] = f">1.0um: \t{pm1um}"
+      display_lines[6] = f">2.5um: \t{pm25um}"
+      display_lines[7] = f">5.0um: \t{pm5um}"
+      display_lines[8] = f">10um: \t{pm10um}"
+      display_lines[9] = f"id:{id}\t{short_fb_id}"
       write_to_display(display, display_lines)
    else:
       time_string = pretty_time(time.localtime())
-      display_lines.append(f"{time_string}")
-      display_lines.append(f"Wrong block")
-      display_lines.append(f"number param")
-      display_lines.append(f"in print")
-      display_lines.append("-")
+      display_lines[0] = f"{time_string}"
+      display_lines[1] = f"Wrong block"
+      display_lines[2] = f"number param"
+      display_lines[3] = f"in print"
       write_to_display(display, display_lines)
    time.sleep(delay_in_secs)
    return None
@@ -128,15 +123,24 @@ def write_to_display(display, text_list: list) -> None:
 
    text_area = label.Label(terminalio.FONT, text=text_list[0], x=3 + BORDER, y=6 + BORDER)
    splash.append(text_area)
-   text_area = label.Label(terminalio.FONT, text=text_list[1], x=9 + BORDER, y=18 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[1], x=3 + BORDER, y=18 + BORDER)
    splash.append(text_area)
-   text_area = label.Label(terminalio.FONT, text=text_list[2], x=9 + BORDER, y=31 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[2], x=3 + BORDER, y=31 + BORDER)
    splash.append(text_area)
-   text_area = label.Label(terminalio.FONT, text=text_list[3], x=9 + BORDER, y=45 + BORDER)
+   text_area = label.Label(terminalio.FONT, text=text_list[3], x=3 + BORDER, y=45 + BORDER)
    splash.append(text_area)   
    text_area = label.Label(terminalio.FONT, text=text_list[4], x=3 + BORDER, y=58 + BORDER)
    splash.append(text_area)   
-
+   text_area = label.Label(terminalio.FONT, text=text_list[5], x=3 + BORDER, y=61 + BORDER)
+   splash.append(text_area)   
+   text_area = label.Label(terminalio.FONT, text=text_list[6], x=3 + BORDER, y=74 + BORDER)
+   splash.append(text_area) 
+   text_area = label.Label(terminalio.FONT, text=text_list[7], x=3 + BORDER, y=87 + BORDER)
+   splash.append(text_area) 
+   text_area = label.Label(terminalio.FONT, text=text_list[8], x=3 + BORDER, y=100 + BORDER)
+   splash.append(text_area) 
+   text_area = label.Label(terminalio.FONT, text=text_list[9], x=3 + BORDER, y=113 + BORDER)
+   splash.append(text_area)
    return None
 
 def report(measurements: dict={}, display: any= {}, i2c_bus: any= {}, time_string: str="No time")-> None:
@@ -144,19 +148,21 @@ def report(measurements: dict={}, display: any= {}, i2c_bus: any= {}, time_strin
    firebase_id = -1
    forwarder = "down"
    try:
-      temperature = measurements['temperature']
-      relative_humidity = measurements['humidity']
-      eCO2 = measurements['eCO2']
-      tVOC = measurements['TVOC']
-      response_code, id, firebase_id, forwarder = post_to_server(measurements)
+      # temperature = measurements['temperature']
+      # relative_humidity = measurements['humidity']
+      # eCO2 = measurements['eCO2']
+      # tVOC = measurements['TVOC']
+      # response_code, id, firebase_id, forwarder = post_to_server(measurements)
+      response_code = 201
       if(response_code == 201):
          # print(f"🤖 {id} 🤖")
+         firebase_id = "abcdefghijkl"
          print_to_display(display, i2c_bus, 10, 1, id, firebase_id, measurements)   
       else:
          print(f"🧸 Error from Forwarding server: {response_code} 🧸")
    except Exception as e:
       print(f"💀 {e} 💀")     
-   print(f"{time_string} \t {temperature}℉ \t {relative_humidity:}% \t eCO2:{eCO2}ppm \t TVOC:{tVOC}ppb \t {id} \t {firebase_id} \t {forwarder} 🐳")
+   # print(f"{time_string} \t {temperature}℉ \t {relative_humidity:}% \t eCO2:{eCO2}ppm \t TVOC:{tVOC}ppb \t {id} \t {firebase_id} \t {forwarder} 🐳")
 
    return None   
 

@@ -105,7 +105,7 @@ except Exception as e:
    print_to_display(display, i2c_bus, 8, 3)
 
 degree_symbol = chr(176)
-print("+" * 144)
+print("+" * 25)
 print_toggle = True  # used to control the amount of printing/reporting in the loop
 while True:
    time.sleep(0.3)
@@ -141,32 +141,15 @@ while True:
             aqd = pm25.read()
          except RuntimeError:
             print("Unable to read from PM2.5 sensor")
-            continue
-         print(
-            time_string, 
-            f"pm10s: {aqd['pm10 standard']}", 
-            f"pm25s: {aqd['pm25 standard']}", 
-            f"pm100s: {aqd['pm100 standard']}", 
-            # f"pm10e: {aqd['pm10 env']}", 
-            # f"pm25e: {aqd['pm25 env']}", 
-            # f"pm100e: {aqd['pm100 env']}",
-            f".3um: {aqd['particles 03um']}", 
-            f".5um: {aqd['particles 05um']}",
-            f"1um: {aqd['particles 10um']}", 
-            f"2.5um: {aqd['particles 25um']}", 
-            f"5um: {aqd['particles 50um']}",
-            f"10um: {aqd['particles 100um']}",  
-            "🧸",
-            sep=", "
-         )          
+            continue       
          measurements = {
             "time": time_string,
             "pm10s": aqd['pm10 standard'],
             "pm25s": aqd['pm25 standard'],
             "pm100s": aqd['pm100 standard'],
-            "pm10e": aqd['pm10 env'],
-            "pm25e": aqd['pm25 env'],
-            "pm100e": aqd['pm100 env'],
+            # "pm10e": aqd['pm10 env'],
+            # "pm25e": aqd['pm25 env'],
+            # "pm100e": aqd['pm100 env'],
             ".3um": aqd['particles 03um'],
             ".5um": aqd['particles 05um'],
             "1um": aqd['particles 10um'],

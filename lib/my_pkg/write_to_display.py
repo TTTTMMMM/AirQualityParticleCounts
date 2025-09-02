@@ -74,12 +74,12 @@ def print_to_display(display,
       # pm10e = measurements["pm10e"]
       # pm25e = measurements["pm25e"]
       # pm100e = measurements["pm100e"]
-      pm03um = measurements[".3um"]
-      pm05um = measurements[".5um"]
-      pm1um = measurements["1um"]
-      pm25um = measurements["2.5um"]
-      pm5um = measurements["5um"]
-      pm10um = measurements["10um"]
+      pm03um = measurements["pm03um"]
+      pm05um = measurements["pm05um"]
+      pm1um = measurements["pm1um"]
+      pm25um = measurements["pm25um"]
+      pm5um = measurements["pm5um"]
+      pm10um = measurements["pm10um"]
       short_fb_id = fb_id[:8]
       display_lines[0] = f"{time_string}"
       display_lines[1] = f"1.0:{pm10s} 2.5:{pm25s} 10:{pm100s}"
@@ -150,17 +150,16 @@ def report(measurements: dict={}, display: any= {}, i2c_bus: any= {}, time_strin
    firebase_id = -1
    forwarder = "down"
    try:
-      pm03um = measurements[".3um"]
-      pm05um = measurements[".5um"]
-      pm1um = measurements["1um"]
-      pm25um = measurements["2.5um"]
-      pm5um = measurements["5um"]
-      pm10um = measurements["10um"]
-      # response_code, id, firebase_id, forwarder = post_to_server(measurements)
+      pm03um = measurements["pm03um"]
+      pm05um = measurements["pm05um"]
+      pm1um = measurements["pm1um"]
+      pm25um = measurements["pm25um"]
+      pm5um = measurements["pm5um"]
+      pm10um = measurements["pm10um"]
+      response_code, id, firebase_id, forwarder = post_to_server(measurements)
       response_code = 201
       if(response_code == 201):
          # print(f"🤖 {id} 🤖")
-         firebase_id = "abcdefghijkl"
          print_to_display(display, i2c_bus, 10, 1, id, firebase_id, measurements)   
       else:
          print(f"🧸 Error from Forwarding server: {response_code} 🧸")

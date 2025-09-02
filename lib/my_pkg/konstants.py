@@ -7,12 +7,9 @@ rotary_encoder_constants = {
    "addresses": [0x36]
 }
 server_constants = {
-   "json_get_url_Mac": "http://192.168.1.216:8001/forwarder/metrics/",
-   "json_post_url_Mac": "http://192.168.1.216:8001/forwarder/metrics/create/",
    "json_get_particlesizecounts_Mac": "http://192.168.1.170:8001/forwarder/particlesizecounts/",
    "json_post_particlesizecounts_Mac": "http://192.168.1.170:8001/forwarder/particlesizecounts/create/",
-   "json_get_url_NAS": "http://192.168.1.232:8001/forwarder/metrics/",
-   "json_post_url_NAS": "http://192.168.1.232:8001/forwarder/metrics/create/",
+
    "json_get_particlesizecounts_NAS": "http://192.168.1.232:8001/forwarder/particlesizecounts/",
    "json_post_particlesizecounts_NAS": "http://192.168.1.232:8001/forwarder/particlesizecounts/create/",
 }

@@ -143,19 +143,18 @@ while True:
             print("Unable to read from PM2.5 sensor")
             continue       
          measurements = {
-            "time": time_string,
             "pm10s": aqd['pm10 standard'],
             "pm25s": aqd['pm25 standard'],
             "pm100s": aqd['pm100 standard'],
             # "pm10e": aqd['pm10 env'],
             # "pm25e": aqd['pm25 env'],
             # "pm100e": aqd['pm100 env'],
-            ".3um": aqd['particles 03um'],
-            ".5um": aqd['particles 05um'],
-            "1um": aqd['particles 10um'],
-            "2.5um": aqd['particles 25um'],
-            "5um": aqd['particles 50um'],
-            "10um": aqd['particles 100um']
+            "pm03um": aqd['particles 03um'],
+            # "pm05um": aqd['particles 05um'],
+            # "pm1um": aqd['particles 10um'],
+            # "pm25um": aqd['particles 25um'],
+            # "pm5um": aqd['particles 50um'],
+            # "pm10um": aqd['particles 100um']
          }
          report(measurements, display, i2c_bus, time_string)
       reset_print_time = (time_string.split(":")[2])  in reset_report_times

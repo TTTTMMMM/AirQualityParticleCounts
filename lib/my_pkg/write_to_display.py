@@ -75,22 +75,22 @@ def print_to_display(display,
       # pm25e = measurements["pm25e"]
       # pm100e = measurements["pm100e"]
       pm03um = measurements["pm03um"]
-      pm05um = measurements["pm05um"]
-      pm1um = measurements["pm1um"]
-      pm25um = measurements["pm25um"]
-      pm5um = measurements["pm5um"]
-      pm10um = measurements["pm10um"]
+      # pm10s = measurements["pm10s"]
+      # pm1um = measurements["pm1um"]
+      # pm25um = measurements["pm25um"]
+      # pm5um = measurements["pm5um"]
+      # pm10um = measurements["pm10um"]
       short_fb_id = fb_id[:8]
       display_lines[0] = f"{time_string}"
       display_lines[1] = f"1.0:{pm10s} 2.5:{pm25s} 10:{pm100s}"
       # display_lines[2] = f"1.0e:{pm10e} \t2.5e:{pm25e} \t10e:{pm100e}"
       display_lines[2] = f"num > 0.3um: {pm03um}"
-      display_lines[3] = f"num > 0.5um: {pm05um}"
-      display_lines[4] = f"num > 1.0um: {pm1um}"
-      display_lines[5] = f"num > 2.5um: {pm25um}"
-      display_lines[6] = f"num > 5.0um: {pm5um}"
-      display_lines[7] = f"num > 10um:  {pm10um}"
-      display_lines[8] = f"id:{id}\t{short_fb_id}"
+      # display_lines[3] = f"num > 0.5um: {pm05um}"
+      # display_lines[4] = f"num > 1.0um: {pm1um}"
+      # display_lines[5] = f"num > 2.5um: {pm25um}"
+      # display_lines[6] = f"num > 5.0um: {pm5um}"
+      # display_lines[7] = f"num > 10um:  {pm10um}"
+      display_lines[8] = f" {id}   {short_fb_id}"
       write_to_display(display, display_lines)
    else:
       time_string = pretty_time(time.localtime())
@@ -151,21 +151,22 @@ def report(measurements: dict={}, display: any= {}, i2c_bus: any= {}, time_strin
    forwarder = "down"
    try:
       pm03um = measurements["pm03um"]
-      pm05um = measurements["pm05um"]
-      pm1um = measurements["pm1um"]
-      pm25um = measurements["pm25um"]
-      pm5um = measurements["pm5um"]
-      pm10um = measurements["pm10um"]
+      # pm05um = measurements["pm05um"]
+      # pm1um = measurements["pm1um"]
+      # pm25um = measurements["pm25um"]
+      # pm5um = measurements["pm5um"]
+      # pm10um = measurements["pm10um"]
+      pm10s = measurements["pm10s"]
+      pm25s = measurements["pm25s"]
+      pm100s = measurements["pm100s"]
       response_code, id, firebase_id, forwarder = post_to_server(measurements)
-      response_code = 201
       if(response_code == 201):
-         # print(f"🤖 {id} 🤖")
          print_to_display(display, i2c_bus, 10, 1, id, firebase_id, measurements)   
       else:
          print(f"🧸 Error from Forwarding server: {response_code} 🧸")
    except Exception as e:
       print(f"💀 {e} 💀")     
-   print(f"{time_string} \t pm03um:{pm03um} \t pm05um:{pm05um} \t pm1um:{pm1um} \t pm25um:{pm25um} \t pm5um:{pm5um} \t pm10um:{pm10um} \t {id} \t {firebase_id} \t {forwarder} 🐳")
+   print(f"{time_string} \t pm03um:{pm03um} \t pm10s:{pm10s} \t pm25s:{pm25s} \t pm100s:{pm100s} \t {id} \t {firebase_id} \t {forwarder} 🐳")
 
    return None   
 

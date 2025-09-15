@@ -33,5 +33,7 @@ def post_to_server(data: dict) -> any:
          # print(f"🛀{response.json()}🛀")
    except Exception as e:
       print(f"An exception was raised in {__name__}")
-      raise Exception(f"🪖 From forwarding server {e} 🪖")   
+      raise Exception(f"🪖 From post_to_server {e} 🪖")   
+   if(response.status_code != 201):
+      raise Exception(f"🪖 Status Code from forwarding server {response.status_code} 🪖")
    return (response.status_code, response.json()['id'], response.json()['firebase_id'], response.json()['forwarder'])

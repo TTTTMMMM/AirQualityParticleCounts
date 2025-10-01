@@ -6,3 +6,6 @@
 
 ![Hardware](./images/002.png)
 
+---
+
+![Wattage](./images/003.png)
